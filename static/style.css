@@ -1,0 +1,113 @@
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #0a0a0a;
+    line-height: 1.6;
+}
+
+h1 {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 800;
+    margin-top: 50px;
+}
+
+h1 span {
+    color: #b0b0b0;
+}
+
+form {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+label {
+    display: block;
+    margin: 20px 0 10px;
+    font-weight: 600;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 14px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+button {
+    display: inline-block;
+    width: 100%;
+    padding: 14px;
+    margin-top: 30px;
+    border: none;
+    border-radius: 50px;
+    background: #000;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #333;
+}
+
+.options-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.option {
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.option.selected {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+footer {
+    background: #0a0a0a;
+    color: #fff;
+    padding: 50px 20px;
+    text-align: center;
+}
+
+footer a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+.footer-container {
+    max-width: 1000px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.footer-column {
+    margin-bottom: 20px;
+}
+
+input::placeholder, textarea::placeholder {
+    color: #aaa;
+}

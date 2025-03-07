@@ -1,0 +1,18 @@
+# Abaikan folder virtual environment
+venv/
+
+# Abaikan folder cache Python
+__pycache__/
+
+# Abaikan file compiled Python
+*.pyc
+
+# Abaikan file environment variables
+.env
+
+# Abaikan folder konfigurasi VS Code
+.vscode/
+
+# Abaikan file database lokal (jika ada)
+*.db
+*.sqlite3
