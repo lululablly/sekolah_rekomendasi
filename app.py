@@ -30,7 +30,8 @@ class Sekolah:
                       skor_lokasi * bobot_lokasi +
                       skor_jarak * bobot_jarak)
 
-        return total_skor
+        # Bulatkan skor menjadi 2 angka di belakang koma
+        return round(total_skor, 2)
 
 @app.route('/')
 def index():
