@@ -7,9 +7,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Hasil Rekomendasi Kamu</h1>
-    <p>Sekolah/Kampus: {{ nama }}</p>
-    <p>Skor: {{ skor }}</p>
-    <button class="back-button" onclick="window.location.href='/'">Kembali</button>
+    <div class="result-container">
+        <h1>Hasil Rekomendasi Kamu</h1>
+        <p><strong>Sekolah/Kampus:</strong> {{ nama }}</p>
+        <p><strong>Skor:</strong> <span class="score">{{ skor }}</span></p>
+        <button class="back-button" onclick="window.location.href='/'">Kembali</button>
+    </div>
 </body>
 </html>
