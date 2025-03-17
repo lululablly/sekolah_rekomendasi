@@ -70,17 +70,27 @@ def cari_sekolah():
 
 @app.route('/rekomendasi', methods=['POST'])
 def rekomendasi():
-    nama = request.form['nama']
+    # Ambil id sekolah/kampus dari form
+    id_sekolah = request.form['nama']  # Ini sebenarnya id, bukan nama
     lokasi = request.form['lokasi']
     akreditasi = request.form['akreditasi']
     biaya = int(request.form['biaya'])
     fasilitas = int(request.form['fasilitas'])
     jarak = int(request.form['jarak'])
 
-    sekolah = Sekolah(nama, lokasi, akreditasi, biaya, fasilitas, jarak)
+    # Baca dataset untuk mencari nama sekolah/kampus berdasarkan id
+    df = baca_dataset_sekolah()
+    sekolah_data = df[df['No'] == int(id_sekolah)]  # Cari data berdasarkan id
+    if not sekolah_data.empty:
+        nama_sekolah = sekolah_data.iloc[0]['Nama']  # Ambil nama sekolah/kampus
+    else:
+        nama_sekolah = "Sekolah/Kampus Tidak Ditemukan"  # Fallback jika tidak ditemukan
+
+    # Hitung skor rekomendasi
+    sekolah = Sekolah(nama_sekolah, lokasi, akreditasi, biaya, fasilitas, jarak)
     skor = sekolah.hitung_skor()
 
-    return render_template('result.html', nama=sekolah.nama, skor=skor)
+    return render_template('result.html', nama=nama_sekolah, skor=skor)
 
 if __name__ == '__main__':
     app.run(debug=True)
