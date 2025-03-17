@@ -1,7 +1,22 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
+import pandas as pd
+import os
 
 app = Flask(__name__)
 
+# Path ke file CSV
+CSV_PATH = os.path.join(os.path.dirname(__file__), 'data', 'univ_indonesia.csv')
+
+# Fungsi untuk membaca dataset
+def baca_dataset_sekolah():
+    try:
+        df = pd.read_csv(CSV_PATH)  # Baca file CSV
+        return df
+    except FileNotFoundError:
+        print(f"File tidak ditemukan: {CSV_PATH}")
+        return pd.DataFrame()  # Kembalikan DataFrame kosong jika file tidak ditemukan
+
+# Definisikan class Sekolah
 class Sekolah:
     def __init__(self, nama, lokasi, akreditasi, biaya, fasilitas, jarak):
         self.nama = nama
@@ -36,6 +51,22 @@ class Sekolah:
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/cari-sekolah', methods=['GET'])
+def cari_sekolah():
+    kata_kunci = request.args.get('q', '').lower()  # Ambil kata kunci pencarian
+    df = baca_dataset_sekolah()
+
+    # Filter data berdasarkan kata kunci
+    if not df.empty:
+        hasil_pencarian = df[df['Nama'].str.lower().str.contains(kata_kunci)]  # Gunakan kolom 'Nama'
+        hasil_pencarian = hasil_pencarian.to_dict('records')  # Konversi ke format dictionary
+    else:
+        hasil_pencarian = []
+
+    # Format hasil untuk Select2
+    hasil_format = [{'id': row['No'], 'text': row['Nama']} for row in hasil_pencarian]  # Gunakan kolom 'No' dan 'Nama'
+    return jsonify(hasil_format)
 
 @app.route('/rekomendasi', methods=['POST'])
 def rekomendasi():
