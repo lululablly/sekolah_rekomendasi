@@ -5,19 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rekomendasi Sekolah/Kampus</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body>
     <h1>Pemilihan Sekolah/Kampus Terbaik</h1>
     <form action="/rekomendasi" method="POST">
         <label for="nama">Nama Sekolah/Kampus:</label>
-        <input type="text" id="nama" name="nama" required><br>
+        <select id="nama" name="nama" class="select2" style="width: 100%;" required>
+            <option value="">Cari sekolah/kampus...</option>
+        </select>
 
         <label for="lokasi">Lokasi:</label>
         <select id="lokasi" name="lokasi" required>
             <option value="Pusat Kota">Pusat Kota</option>
             <option value="Kecamatan">Kecamatan</option>
             <option value="Pedesaan">Pedesaan</option>
-        </select><br>
+        </select>
 
         <label for="akreditasi">Akreditasi:</label>
         <select id="akreditasi" name="akreditasi" required>
@@ -26,18 +29,52 @@
             <option value="C">C</option>
             <option value="D">D</option>
             <option value="E">E</option>
-        </select><br>
+        </select>
 
         <label for="biaya">Biaya (1-5):</label>
-        <input type="number" id="biaya" name="biaya" min="1" max="5" required><br>
+        <input type="number" id="biaya" name="biaya" min="1" max="5" required>
 
         <label for="fasilitas">Fasilitas (1-5):</label>
-        <input type="number" id="fasilitas" name="fasilitas" min="1" max="5" required><br>
+        <input type="number" id="fasilitas" name="fasilitas" min="1" max="5" required>
 
         <label for="jarak">Jarak (1-5):</label>
-        <input type="number" id="jarak" name="jarak" min="1" max="5" required><br>
+        <input type="number" id="jarak" name="jarak" min="1" max="5" required>
 
         <button type="submit">Cari Rekomendasi</button>
     </form>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                placeholder: "Cari sekolah/kampus...",
+                allowClear: true,
+                ajax: {
+                    url: '/cari-sekolah',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 1
+            });
+
+            // Pastikan nilai yang dipilih tetap ada di input pencarian
+            $('.select2').on('select2:select', function(e) {
+                var data = e.params.data;
+                $(this).val(data.id).trigger('change'); // Set nilai yang dipilih
+            });
+        });
+    </script>
 </body>
 </html>
