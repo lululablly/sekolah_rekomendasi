@@ -3,41 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rekomendasi Sekolah/Kampus</title>
+    <title>Rekomendasi Kampus</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <h1>Pemilihan Sekolah/Kampus Terbaik</h1>
-    <form action="/rekomendasi" method="POST">
-        <label for="nama">Nama Sekolah/Kampus:</label>
-        <input type="text" id="nama" name="nama" required><br>
+    <h1>Pemilihan Kampus Terbaik</h1>
 
-        <label for="lokasi">Lokasi:</label>
+    <!-- Penjelasan Perhitungan Skor -->
+    <div class="explanation-container">
+        <h2>Cara Perhitungan Skor</h2>
+        <p>Skor kampus dihitung berdasarkan lima faktor berikut, masing-masing memiliki bobot tertentu:</p>
+        <ul>
+            <li><strong>Akreditasi (30%):</strong> Kualitas akademik kampus.
+                <ul>
+                    <li>A = 5, B = 4, C = 3, D = 2, E = 1</li>
+                </ul>
+            </li>
+            <li><strong>Biaya (25%):</strong> Biaya kuliah per semester.
+                <ul>
+                    <li>1 = sangat murah, 5 = sangat mahal</li>
+                    <li>Skor = 5 - nilai input (biaya rendah = skor tinggi)</li>
+                </ul>
+            </li>
+            <li><strong>Fasilitas (20%):</strong> Kualitas fasilitas kampus.
+                <ul>
+                    <li>1 = minim, 5 = sangat lengkap</li>
+                </ul>
+            </li>
+            <li><strong>Lokasi (15%):</strong> Letak geografis kampus.
+                <ul>
+                    <li>Pusat Kota = 5, Kecamatan = 4, Pedesaan = 3</li>
+                </ul>
+            </li>
+            <li><strong>Jarak (10%):</strong> Jarak dari lokasi Anda.
+                <ul>
+                    <li>1 = sangat dekat, 5 = sangat jauh</li>
+                    <li>Skor = 5 - nilai input (jarak dekat = skor tinggi)</li>
+                </ul>
+            </li>
+        </ul>
+        <p><strong>Rumus Skor Total:</strong></p>
+        <p>Skor = (Skor Akreditasi × 0.3) + (Skor Biaya × 0.25) + (Skor Fasilitas × 0.2) + (Skor Lokasi × 0.15) + (Skor Jarak × 0.1)</p>
+        <p><strong>Contoh:</strong> Jika Anda memilih Akreditasi = A, Biaya = 2, Fasilitas = 4, Lokasi = Pusat Kota, Jarak = 1:</p>
+        <ul>
+            <li>Skor Akreditasi = 5 × 0.3 = 1.5</li>
+            <li>Skor Biaya = (5-2) × 0.25 = 0.75</li>
+            <li>Skor Fasilitas = 4 × 0.2 = 0.8</li>
+            <li>Skor Lokasi = 5 × 0.15 = 0.75</li>
+            <li>Skor Jarak = (5-1) × 0.1 = 0.4</li>
+            <li><strong>Total = 1.5 + 0.75 + 0.8 + 0.75 + 0.4 = 4.2</strong></li>
+        </ul>
+        <p>Pilih nilai dengan hati-hati untuk mendapatkan rekomendasi yang sesuai!</p>
+    </div>
+
+    <!-- Kalkulator Mini -->
+    <div class="calculator-container">
+        <h2>Coba Hitung Skor</h2>
+        <p>Masukkan nilai di bawah untuk melihat perkiraan skor sebelum submit:</p>
+        <div class="calculator-form">
+            <label for="calc-akreditasi">Akreditasi:</label>
+            <select id="calc-akreditasi">
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+            </select>
+
+            <label for="calc-biaya">Biaya (1-5):</label>
+            <input type="number" id="calc-biaya" min="1" max="5" value="1">
+
+            <label for="calc-fasilitas">Fasilitas (1-5):</label>
+            <input type="number" id="calc-fasilitas" min="1" max="5" value="1">
+
+            <label for="calc-lokasi">Lokasi:</label>
+            <select id="calc-lokasi">
+                <option value="Pusat Kota">Pusat Kota</option>
+                <option value="Kecamatan">Kecamatan</option>
+                <option value="Pedesaan">Pedesaan</option>
+            </select>
+
+            <label for="calc-jarak">Jarak (1-5):</label>
+            <input type="number" id="calc-jarak" min="1" max="5" value="1">
+
+            <button type="button" onclick="calculatePreviewScore()">Hitung Skor</button>
+        </div>
+        <div id="preview-score" class="preview-score"></div>
+    </div>
+
+    <!-- Pesan Error -->
+    {% if error %}
+    <div class="error-message">
+        <p>{{ error }}</p>
+    </div>
+    {% endif %}
+
+    <!-- Form Input -->
+    <form action="/rekomendasi" method="POST">
+        <div class="search-container">
+            <label for="nama">Nama Universitas:</label>
+            <div class="search-box-wrapper">
+                <input type="text" id="nama" name="nama" class="search-box" placeholder="Cari universitas..." required>
+                <input type="hidden" id="sekolah_id" name="sekolah_id">
+                <button type="button" class="clear-search" style="display: none;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="suggestions" class="suggestions-container"></div>
+        </div>
+
+        <label for="lokasi">Lokasi: <span class="tooltip">Pusat Kota (5), Kecamatan (4), Pedesaan (3)</span></label>
         <select id="lokasi" name="lokasi" required>
             <option value="Pusat Kota">Pusat Kota</option>
-            <option value="Suburban">Kecamatan</option>
+            <option value="Kecamatan">Kecamatan</option>
             <option value="Pedesaan">Pedesaan</option>
-        </select><br>
+        </select>
 
-        <label for="akreditasi">Akreditasi:</label>
+        <label for="akreditasi">Akreditasi: <span class="tooltip">A (5), B (4), C (3), D (2), E (1)</span></label>
         <select id="akreditasi" name="akreditasi" required>
             <option value="A">A</option>
             <option value="B">B</option>
             <option value="C">C</option>
             <option value="D">D</option>
             <option value="E">E</option>
-        </select><br>
+        </select>
 
-        <label for="biaya">Biaya (1-5):</label>
-        <input type="number" id="biaya" name="biaya" min="1" max="5" required><br>
+        <label for="biaya">Biaya (1-5): <span class="tooltip">1 = sangat murah, 5 = sangat mahal</span></label>
+        <input type="number" id="biaya" name="biaya" min="1" max="5" required>
 
-        <label for="fasilitas">Fasilitas (1-5):</label>
-        <input type="number" id="fasilitas" name="fasilitas" min="1" max="5" required><br>
+        <label for="fasilitas">Fasilitas (1-5): <span class="tooltip">1 = minim, 5 = sangat lengkap</span></label>
+        <input type="number" id="fasilitas" name="fasilitas" min="1" max="5" required>
 
-        <label for="jarak">Jarak (1-5):</label>
-        <input type="number" id="jarak" name="jarak" min="1" max="5" required><br>
+        <label for="jarak">Jarak (1-5): <span class="tooltip">1 = sangat dekat, 5 = sangat jauh</span></label>
+        <input type="number" id="jarak" name="jarak" min="1" max="5" required>
 
         <button type="submit">Cari Rekomendasi</button>
     </form>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Autocomplete Search
+        $(document).ready(function() {
+            const input = $('#nama');
+            const sekolahId = $('#sekolah_id');
+            const suggestions = $('#suggestions');
+            const clearBtn = $('.clear-search');
+            
+            function highlightMatch(text, query) {
+                if (!query) return text;
+                const regex = new RegExp(`(${query})`, 'gi');
+                return text.replace(regex, '<span class="highlight">$1</span>');
+            }
+            
+            input.on('input', function() {
+                clearBtn.toggle(!!$(this).val());
+                searchKampus();
+            });
+            
+            function searchKampus() {
+                const query = input.val().trim();
+                if (query.length < 2) {
+                    suggestions.empty().hide();
+                    return;
+                }
+                
+                $.get('/cari-sekolah', { q: query }, function(data) {
+                    suggestions.empty();
+                    if (data.error) {
+                        suggestions.append(`<div class="suggestion-item error">${data.error}</div>`);
+                        suggestions.show();
+                        return;
+                    }
+                    if (data.length > 0) {
+                        data.forEach(item => {
+                            suggestions.append(
+                                `<div class="suggestion-item" data-id="${item.id}">
+                                    ${highlightMatch(item.text, query)}
+                                </div>`
+                            );
+                        });
+                        suggestions.show();
+                    } else {
+                        suggestions.hide();
+                    }
+                });
+            }
+            
+            $(document).on('click', '.suggestion-item', function() {
+                const id = $(this).data('id');
+                const text = $(this).find('span.highlight').length 
+                    ? $(this).text().replace(/\s+/g, ' ').trim() 
+                    : $(this).text().trim();
+                
+                input.val(text);
+                sekolahId.val(id);
+                suggestions.empty().hide();
+            });
+            
+            clearBtn.on('click', function() {
+                input.val('').focus();
+                sekolahId.val('');
+                $(this).hide();
+                suggestions.empty().hide();
+            });
+            
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.search-box-wrapper, .suggestions-container').length) {
+                    suggestions.hide();
+                }
+            });
+        });
+
+        // Kalkulator Mini
+        function calculatePreviewScore() {
+            const akreditasi = document.getElementById('calc-akreditasi').value;
+            const biaya = parseInt(document.getElementById('calc-biaya').value);
+            const fasilitas = parseInt(document.getElementById('calc-fasilitas').value);
+            const lokasi = document.getElementById('calc-lokasi').value;
+            const jarak = parseInt(document.getElementById('calc-jarak').value);
+
+            // Validasi input
+            if (isNaN(biaya) || isNaN(fasilitas) || isNaN(jarak) ||
+                biaya < 1 || biaya > 5 || fasilitas < 1 || fasilitas > 5 || jarak < 1 || jarak > 5) {
+                document.getElementById('preview-score').innerHTML = 
+                    '<p class="error">Input biaya, fasilitas, dan jarak harus antara 1 dan 5.</p>';
+                return;
+            }
+
+            // Hitung skor
+            const bobot_akreditasi = 0.3;
+            const bobot_biaya = 0.25;
+            const bobot_fasilitas = 0.2;
+            const bobot_lokasi = 0.15;
+            const bobot_jarak = 0.1;
+
+            const skor_akreditasi = { 'A': 5, 'B': 4, 'C': 3, 'D': 2, 'E': 1 }[akreditasi] || 0;
+            const skor_biaya = 5 - biaya;
+            const skor_fasilitas = fasilitas;
+            const skor_lokasi = { 'Pusat Kota': 5, 'Kecamatan': 4, 'Pedesaan': 3 }[lokasi] || 0;
+            const skor_jarak = 5 - jarak;
+
+            const total_skor = (skor_akreditasi * bobot_akreditasi +
+                               skor_biaya * bobot_biaya +
+                               skor_fasilitas * bobot_fasilitas +
+                               skor_lokasi * bobot_lokasi +
+                               skor_jarak * bobot_jarak).toFixed(2);
+
+            // Tampilkan hasil
+            document.getElementById('preview-score').innerHTML = `
+                <p><strong>Skor Perkiraan: ${total_skor}/5.00</strong></p>
+                <p>Detail:</p>
+                <ul>
+                    <li>Akreditasi (${akreditasi}): ${skor_akreditasi} × 0.3 = ${(skor_akreditasi * 0.3).toFixed(2)}</li>
+                    <li>Biaya (${biaya}): ${skor_biaya} × 0.25 = ${(skor_biaya * 0.25).toFixed(2)}</li>
+                    <li>Fasilitas (${fasilitas}): ${skor_fasilitas} × 0.2 = ${(skor_fasilitas * 0.2).toFixed(2)}</li>
+                    <li>Lokasi (${lokasi}): ${skor_lokasi} × 0.15 = ${(skor_lokasi * 0.15).toFixed(2)}</li>
+                    <li>Jarak (${jarak}): ${skor_jarak} × 0.1 = ${(skor_jarak * 0.1).toFixed(2)}</li>
+                </ul>
+            `;
+        }
+    </script>
 </body>
 </html>
