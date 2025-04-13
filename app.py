@@ -14,10 +14,10 @@ app = Flask(__name__)
 #     'database': os.getenv('MYSQL_DB', 'universitas_db')
 # }
 MYSQL_CONFIG = {
-    'host': 'localhost',
-    'user': 'root',  # Ganti dengan username MySQL Anda
-    'password': '',  # Ganti dengan password MySQL Anda
-    'database': 'universitas_db'
+    'host': 'lulablly.mysql.pythonanywhere-services.com',
+    'user': 'lulablly',
+    'password': 'AyokMakan123',  # Ganti dengan kata sandi MySQL kamu
+    'database': 'lulablly$username-universitas_db'
 }
 
 def get_db_connection():
