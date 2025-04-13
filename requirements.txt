@@ -2,26 +2,20 @@ blinker==1.9.0
 click==8.1.8
 colorama==0.4.6
 Flask==3.1.0
-<<<<<<< HEAD
 Flask-MySQLdb==2.0.0
-=======
->>>>>>> 7724ad14dbbe79209641adc85c0654f651f62242
 gunicorn==23.0.0
 itsdangerous==2.2.0
 Jinja2==3.1.5
 MarkupSafe==3.0.2
-<<<<<<< HEAD
 mysql-connector-python==9.2.0
 mysqlclient==2.2.7
 numpy==2.2.4
 packaging==24.2
 pandas==2.2.3
 PyMySQL==1.1.1
-=======
 numpy==2.2.4
 packaging==24.2
 pandas==2.2.3
->>>>>>> 7724ad14dbbe79209641adc85c0654f651f62242
 python-dateutil==2.9.0.post0
 pytz==2025.1
 six==1.17.0
