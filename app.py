@@ -16,8 +16,8 @@ app = Flask(__name__)
 MYSQL_CONFIG = {
     'host': 'lulablly.mysql.pythonanywhere-services.com',
     'user': 'lulablly',
-    'password': 'AyokMakan123',  # Ganti dengan kata sandi MySQL kamu
-    'database': 'lulablly$username-universitas_db'
+    'password': '',  # Ganti dengan kata sandi MySQL kamu
+    'database': 'lulablly$universitas_db'
 }
 
 def get_db_connection():
