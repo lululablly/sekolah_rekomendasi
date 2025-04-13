@@ -1,10 +1,14 @@
 from flask import Flask, render_template, request, jsonify
+<<<<<<< HEAD
 import mysql.connector
+=======
+>>>>>>> 7724ad14dbbe79209641adc85c0654f651f62242
 import pandas as pd
 import os
 
 app = Flask(__name__)
 
+<<<<<<< HEAD
 # Configure MySQL connection
 # Untuk produksi, gunakan variabel lingkungan:
 # MYSQL_CONFIG = {
@@ -125,6 +129,21 @@ def baca_dataset_sekolah():
     finally:
         conn.close()
 
+=======
+# Path ke file CSV
+CSV_PATH = os.path.join(os.path.dirname(__file__), 'data', 'univ_indonesia.csv')
+
+# Fungsi untuk membaca dataset
+def baca_dataset_sekolah():
+    try:
+        df = pd.read_csv(CSV_PATH)  # Baca file CSV
+        return df
+    except FileNotFoundError:
+        print(f"File tidak ditemukan: {CSV_PATH}")
+        return pd.DataFrame()  # Kembalikan DataFrame kosong jika file tidak ditemukan
+
+# Definisikan class Sekolah
+>>>>>>> 7724ad14dbbe79209641adc85c0654f651f62242
 class Sekolah:
     def __init__(self, nama, lokasi, akreditasi, biaya, fasilitas, jarak):
         self.nama = nama
@@ -155,6 +174,7 @@ class Sekolah:
                       skor_lokasi * bobot_lokasi +
                       skor_jarak * bobot_jarak)
 
+<<<<<<< HEAD
         # Simpan detail perhitungan
         detail_perhitungan = {
             'akreditasi': {
@@ -190,6 +210,10 @@ class Sekolah:
         }
 
         return round(total_skor, 2), detail_perhitungan
+=======
+        # Bulatkan skor menjadi 2 angka di belakang koma
+        return round(total_skor, 2)
+>>>>>>> 7724ad14dbbe79209641adc85c0654f651f62242
 
 @app.route('/')
 def index():
@@ -197,6 +221,7 @@ def index():
 
 @app.route('/cari-sekolah', methods=['GET'])
 def cari_sekolah():
+<<<<<<< HEAD
     query = request.args.get('q', '').lower()
     conn = get_db_connection()
     if conn is None:
@@ -226,6 +251,26 @@ def cari_sekolah():
 def rekomendasi():
     # Get form data
     nama = request.form['nama']
+=======
+    kata_kunci = request.args.get('q', '').lower()  # Ambil kata kunci pencarian
+    df = baca_dataset_sekolah()
+
+    # Filter data berdasarkan kata kunci
+    if not df.empty:
+        hasil_pencarian = df[df['Nama'].str.lower().str.contains(kata_kunci)]  # Gunakan kolom 'Nama'
+        hasil_pencarian = hasil_pencarian.to_dict('records')  # Konversi ke format dictionary
+    else:
+        hasil_pencarian = []
+
+    # Format hasil untuk Select2
+    hasil_format = [{'id': row['No'], 'text': row['Nama']} for row in hasil_pencarian]  # Gunakan kolom 'No' dan 'Nama'
+    return jsonify(hasil_format)
+
+@app.route('/rekomendasi', methods=['POST'])
+def rekomendasi():
+    # Ambil id sekolah/kampus dari form
+    id_sekolah = request.form['nama']  # Ini sebenarnya id, bukan nama
+>>>>>>> 7724ad14dbbe79209641adc85c0654f651f62242
     lokasi = request.form['lokasi']
     akreditasi = request.form['akreditasi']
     try:
@@ -235,6 +280,7 @@ def rekomendasi():
     except ValueError:
         return render_template('index.html', error="Input biaya, fasilitas, dan jarak harus berupa angka.")
 
+<<<<<<< HEAD
     # Validate input
     if biaya < 1 or biaya > 5 or fasilitas < 1 or fasilitas > 5 or jarak < 1 or jarak > 5:
         return render_template('index.html', error="Input biaya, fasilitas, dan jarak harus antara 1 dan 5.")
@@ -315,3 +361,21 @@ if __name__ == '__main__':
     init_db()
     populate_universities()
     app.run(debug=True)
+=======
+    # Baca dataset untuk mencari nama sekolah/kampus berdasarkan id
+    df = baca_dataset_sekolah()
+    sekolah_data = df[df['No'] == int(id_sekolah)]  # Cari data berdasarkan id
+    if not sekolah_data.empty:
+        nama_sekolah = sekolah_data.iloc[0]['Nama']  # Ambil nama sekolah/kampus
+    else:
+        nama_sekolah = "Sekolah/Kampus Tidak Ditemukan"  # Fallback jika tidak ditemukan
+
+    # Hitung skor rekomendasi
+    sekolah = Sekolah(nama_sekolah, lokasi, akreditasi, biaya, fasilitas, jarak)
+    skor = sekolah.hitung_skor()
+
+    return render_template('result.html', nama=nama_sekolah, skor=skor)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+>>>>>>> 7724ad14dbbe79209641adc85c0654f651f62242

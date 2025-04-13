@@ -1,9 +1,16 @@
 /* style.css */
+<<<<<<< HEAD
 /* Base Styles */
+=======
+>>>>>>> 7724ad14dbbe79209641adc85c0654f651f62242
 body {
     font-family: 'Inter', sans-serif;
     margin: 0;
     padding: 0;
+<<<<<<< HEAD
+=======
+    background: linear-gradient(135deg, #f4f4f9, #e0e0f5);
+>>>>>>> 7724ad14dbbe79209641adc85c0654f651f62242
     color: #333;
     line-height: 1.6;
     background: url('/static/images/campus_background.jpg') no-repeat center center fixed;
@@ -36,6 +43,7 @@ h1 {
     font-size: 2.5rem;
     font-weight: 800;
     margin-top: 50px;
+<<<<<<< HEAD
     color: #ffffff;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
@@ -44,6 +52,10 @@ h1 {
 .result-container h1 {
     color: #d4d7de;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+=======
+    color: #2c3e50;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+>>>>>>> 7724ad14dbbe79209641adc85c0654f651f62242
 }
 
 /* Explanation Section */
@@ -204,7 +216,11 @@ input, select {
     transition: border-color 0.3s, box-shadow 0.3s;
 }
 
+<<<<<<< HEAD
 input:focus, select:focus {
+=======
+input:focus, select:focus, textarea:focus {
+>>>>>>> 7724ad14dbbe79209641adc85c0654f651f62242
     border-color: #3498db;
     outline: none;
     box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
@@ -229,6 +245,7 @@ button:hover {
     transform: translateY(-2px);
 }
 
+<<<<<<< HEAD
 /* Search Box Styles */
 .search-container {
     position: relative;
@@ -237,6 +254,104 @@ button:hover {
 
 .search-box-wrapper {
     position: relative;
+=======
+/* Select2 Custom Styles */
+.select2-container {
+    width: 100% !important;
+    margin-bottom: 20px;
+}
+
+.select2-selection {
+    border: 1px solid #ddd !important;
+    border-radius: 12px !important;
+    padding: 14px !important;
+    height: auto !important;
+    margin-bottom: 20px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.select2-selection:focus {
+    border-color: #3498db !important;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.5) !important;
+}
+
+.select2-selection__arrow {
+    height: 100% !important;
+}
+
+.select2-dropdown {
+    border: 1px solid #ddd !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.select2-results__option {
+    padding: 10px 20px !important;
+    transition: background-color 0.3s;
+}
+
+.select2-results__option--highlighted {
+    background-color: #3498db !important;
+    color: #fff !important;
+}
+
+/* Animasi untuk hasil rekomendasi */
+.result-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.result-container h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.result-container p {
+    font-size: 1.2rem;
+    margin: 10px 0;
+}
+
+.result-container .score {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #3498db;
+}
+
+.back-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.back-button:hover {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    transform: translateY(-2px);
+}
+
+/* Animasi fadeIn */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+>>>>>>> 7724ad14dbbe79209641adc85c0654f651f62242
 }
 
 .search-box {

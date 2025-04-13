@@ -8,6 +8,7 @@
 </head>
 <body>
     <div class="result-container">
+<<<<<<< HEAD
         <h1>Hasil Rekomendasi Kampus</h1>
         
         <div class="result-header">
@@ -108,6 +109,12 @@
         {% endif %}
         
         <a href="{{ url_for('index') }}" class="back-button">Kembali ke Pencarian</a>
+=======
+        <h1>Hasil Rekomendasi Kamu</h1>
+        <p><strong>Sekolah/Kampus:</strong> {{ nama }}</p>
+        <p><strong>Skor:</strong> <span class="score">{{ skor }}</span></p>
+        <button class="back-button" onclick="window.location.href='/'">Kembali</button>
+>>>>>>> 7724ad14dbbe79209641adc85c0654f651f62242
     </div>
 </body>
 </html>

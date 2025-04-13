@@ -5,10 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rekomendasi Kampus</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<<<<<<< HEAD
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <h1>Pemilihan Kampus Terbaik</h1>
+=======
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+</head>
+<body>
+    <h1>Pemilihan Sekolah/Kampus Terbaik</h1>
+    <form action="/rekomendasi" method="POST">
+        <label for="nama">Nama Sekolah/Kampus:</label>
+        <select id="nama" name="nama" class="select2" style="width: 100%;" required>
+            <option value="">Cari sekolah/kampus...</option>
+        </select>
+>>>>>>> 7724ad14dbbe79209641adc85c0654f651f62242
 
     <!-- Penjelasan Perhitungan Skor -->
     <div class="explanation-container">
@@ -129,6 +141,7 @@
             <option value="E">E</option>
         </select>
 
+<<<<<<< HEAD
         <label for="biaya">Biaya (1-5): <span class="tooltip">1 = sangat murah, 5 = sangat mahal</span></label>
         <input type="number" id="biaya" name="biaya" min="1" max="5" required>
 
@@ -136,12 +149,22 @@
         <input type="number" id="fasilitas" name="fasilitas" min="1" max="5" required>
 
         <label for="jarak">Jarak (1-5): <span class="tooltip">1 = sangat dekat, 5 = sangat jauh</span></label>
+=======
+        <label for="biaya">Biaya (1-5):</label>
+        <input type="number" id="biaya" name="biaya" min="1" max="5" required>
+
+        <label for="fasilitas">Fasilitas (1-5):</label>
+        <input type="number" id="fasilitas" name="fasilitas" min="1" max="5" required>
+
+        <label for="jarak">Jarak (1-5):</label>
+>>>>>>> 7724ad14dbbe79209641adc85c0654f651f62242
         <input type="number" id="jarak" name="jarak" min="1" max="5" required>
 
         <button type="submit">Cari Rekomendasi</button>
     </form>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<<<<<<< HEAD
     <script>
         // Autocomplete Search
         $(document).ready(function() {
@@ -263,6 +286,39 @@
                 </ul>
             `;
         }
+=======
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                placeholder: "Cari sekolah/kampus...",
+                allowClear: true,
+                ajax: {
+                    url: '/cari-sekolah',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 1
+            });
+
+            // Pastikan nilai yang dipilih tetap ada di input pencarian
+            $('.select2').on('select2:select', function(e) {
+                var data = e.params.data;
+                $(this).val(data.id).trigger('change'); // Set nilai yang dipilih
+            });
+        });
+>>>>>>> 7724ad14dbbe79209641adc85c0654f651f62242
     </script>
 </body>
 </html>
